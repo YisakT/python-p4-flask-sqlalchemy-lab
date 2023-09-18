@@ -13,6 +13,10 @@ migrate = Migrate(app, db)
 
 db.init_app(app)
 
+@app.route('/')
+def home():
+    return "Welcome to my website!"
+
 @app.route('/animal/<int:id>')
 def animal_by_id(id):
     animal = db.session.get(Animal, id)
@@ -20,6 +24,9 @@ def animal_by_id(id):
     if not animal:
         return make_response('<h1>Animal not found</h1>', 404)
     return f'''
+        <ul>ID:
+            <li>{animal.id}</li>
+        </ul>
         <ul>Name:
             <li>{animal.name}</li>
         </ul>
@@ -35,6 +42,7 @@ def animal_by_id(id):
     '''
 
 
+
 @app.route('/zookeeper/<int:id>')
 def zookeeper_by_id(id):
     zookeeper = db.session.get(Zookeeper, id)
@@ -43,7 +51,18 @@ def zookeeper_by_id(id):
         return make_response('<h1>Zookeeper not found</h1>', 404)
 
     animals_list = ''.join([f'<ul>Animal: {animal.name}</ul>' for animal in zookeeper.animals])
-    return f'''<ul>Name: {zookeeper.name}</ul><ul>Birthday: {zookeeper.birthday}</ul>{animals_list}'''
+    return f'''
+        <ul>ID:
+            <li>{zookeeper.id}</li>
+        </ul>
+        <ul>Name: 
+            <li>{zookeeper.name}</li>
+        </ul>
+        <ul>Birthday: 
+            <li>{zookeeper.birthday}</li>
+        </ul>
+        {animals_list}
+    '''
 
 @app.route('/enclosure/<int:id>')
 def enclosure_by_id(id):
@@ -52,17 +71,21 @@ def enclosure_by_id(id):
     if not enclosure:
         return make_response('<h1>Enclosure not found</h1>', 404)
     
-    
     animals_list = 'Animal: ' + ''.join([f'{animal.name}</li><li>Animal: ' for animal in enclosure.animals])[:-12]
     
-    return '''
-    <ul>Environment: {}
-    </ul>
-    <ul>Open to Visitors: {}
-    </ul>
-    <ul>{}  # animals_list goes here
-    </ul>
-    '''.format(enclosure.environment, enclosure.open_to_visitors, animals_list)
+    return f'''
+        <ul>ID:
+            <li>{enclosure.id}</li>
+        </ul>
+        <ul>Environment:
+            <li>{enclosure.environment}</li>
+        </ul>
+        <ul>Open to Visitors:
+            <li>{enclosure.open_to_visitors}</li>
+        </ul>
+        <ul>{animals_list}</ul>
+    '''
+
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
