@@ -15,7 +15,8 @@ db.init_app(app)
 
 @app.route('/animal/<int:id>')
 def animal_by_id(id):
-    animal = Animal.query.get(id)
+    animal = db.session.get(Animal, id)
+
     if not animal:
         return make_response('<h1>Animal not found</h1>', 404)
     return f'''
@@ -36,7 +37,8 @@ def animal_by_id(id):
 
 @app.route('/zookeeper/<int:id>')
 def zookeeper_by_id(id):
-    zookeeper = Zookeeper.query.get(id)
+    zookeeper = db.session.get(Zookeeper, id)
+
     if not zookeeper:
         return make_response('<h1>Zookeeper not found</h1>', 404)
 
@@ -45,7 +47,8 @@ def zookeeper_by_id(id):
 
 @app.route('/enclosure/<int:id>')
 def enclosure_by_id(id):
-    enclosure = Enclosure.query.get(id)
+    enclosure = db.session.get(Enclosure, id)
+
     if not enclosure:
         return make_response('<h1>Enclosure not found</h1>', 404)
     
